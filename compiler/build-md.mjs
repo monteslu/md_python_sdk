@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { buildGenesisC, finalizeGenesisRom, parseBuildLog } from "romdev-toolchain-m68k-gcc";
 import { compile, formatDiagnostics } from "pycretro";
+import { sheetAssetsHeader } from "./asset-headers.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SDK_DIR = path.resolve(__dirname, "..", "md-sdk");
@@ -36,9 +37,17 @@ export async function buildMd(entryPy, outPath, opts = {}) {
     "md_math.h": await rd("md_math.h"),
     "md_sintab.h": await rd("md_sintab.h"),
     "md_pycretro.h": await rd("md_pycretro.h"),
-    // M0/M1: no user assets -> empty header, runtime uses its fallback tiles.
-    "md_assets.h": "// no assets in this build\n",
   };
+
+  // Sheet asset: bake the pygame.image.load PNGs (cell order = load order).
+  const entryDir = path.dirname(path.resolve(entryPy));
+  if (res.images && res.images.length) {
+    const first = res.images[0];
+    const bytes = new Uint8Array(await readFile(path.join(entryDir, first.path)));
+    headers["md_assets.h"] = "#define MD_HAVE_SHEET 1\n" + sheetAssetsHeader(bytes, first.path, "sheet");
+  } else {
+    headers["md_assets.h"] = "// no assets in this build\n";
+  }
 
   const r = await buildGenesisC({ sources, headers, sgdk: true });
   if (!r.ok) {
