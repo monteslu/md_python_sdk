@@ -42,3 +42,23 @@ class Player:
 
 ## Math
 `abs min max flr sqrt sin cos atan2 rnd`
+
+## Audio
+- `pygame.mixer.music.load("song")` + `pygame.mixer.music.play(-1)` (loop) / `.stop()`
+- `snd = pygame.mixer.Sound("blip")` then `snd.play()`
+- With no `music.load`, `music.play(-1)` plays the built-in tune.
+
+## Sprite groups
+```python
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+    def update(self):
+        self.y += 1
+
+enemies = pygame.sprite.Group(Enemy, 32)   # fixed-capacity pool of ONE class
+enemies.add()            # spawn one (runs __init__)
+enemies.update()         # calls each sprite's update()
+enemies.draw(screen)     # blits each sprite at its x,y
+```
