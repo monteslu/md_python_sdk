@@ -1,3 +1,5 @@
 node_modules/
 *.bin
 game.bin
+examples/**/build/
+examples/**/.pycretro_sheet.gtg

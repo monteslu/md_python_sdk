@@ -1,0 +1,7 @@
+examples/**/build/
+examples/**/*.gtr
+examples/**/*.gba
+examples/**/*.bin
+examples/**/game.*
+examples/**/.pycretro_sheet.gtg
+test/
