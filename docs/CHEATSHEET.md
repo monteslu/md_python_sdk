@@ -1,7 +1,11 @@
 # mdpy cheatsheet (Sega Genesis, 68000)
 
-Screen: **320x224**. Numbers are 16.16 fixed point. See SPEC in the pycretro
-package and DIFFERENCES.md for the full contract.
+**Native resolution: 320 x 224** (H40) — `pygame.display.set_mode((320, 224))`
+must use exactly this. Shape drawing (circfill/rectfill/line) uses a **256 x 160
+canvas at the top-left**; sprites, print text, and blit use the full 320 x 224.
+
+Numbers are 16.16 fixed point. Colors are PICO-8 indices 0-15. See the pycretro
+SPEC and DIFFERENCES.md for the full contract.
 
 ## Program shape
 ```python
