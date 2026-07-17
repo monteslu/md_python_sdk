@@ -70,7 +70,8 @@ core. The compiler front-end is the `pycretro` package.
 
 `examples/`: hello, sprite, music. Build with `mdpython build examples/<name>/main.py`.
 
-See `docs/CHEATSHEET.md` and `DIFFERENCES.md`.
+See `docs/CHEATSHEET.md`, `docs/ASSETS.md` (image/music formats), and
+`DIFFERENCES.md`.
 
 ---
 *Screenshots are the raw framebuffer at 2× integer scale (pixel-perfect

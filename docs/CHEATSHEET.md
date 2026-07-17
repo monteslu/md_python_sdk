@@ -66,3 +66,5 @@ enemies.add()            # spawn one (runs __init__)
 enemies.update()         # calls each sprite's update()
 enemies.draw(screen)     # blits each sprite at its x,y
 ```
+
+Asset formats (image/music requirements + formats): see `ASSETS.md` in this directory.
