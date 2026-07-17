@@ -55,8 +55,11 @@ XGM2 PCM, like the Lua SDK's `--sfx`) are a planned addition.
 
 ## Colors (no image involved)
 
-`(r, g, b)` tuples quantize at compile time to the nearest of the 16 PICO-8
-palette colors (loaded into PAL0); integers 0-15 are PICO-8 indices directly.
+The Genesis hardware shows up to 64 on-screen colors (4 palette lines x 16,
+from 512): this SDK uses PAL0 for the 16-color PICO-8 program palette and
+PAL1 for the sprite sheet's palette. `(r, g, b)` tuples quantize at compile
+time to the nearest of the 16 program-palette colors; integers 0-15 are
+PICO-8 indices directly.
 Shape drawing (`circfill`/`rectfill`/`line`) renders into the 256 x 160
 canvas at the top-left of the 320 x 224 screen (see DIFFERENCES.md).
 
