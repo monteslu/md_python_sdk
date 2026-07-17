@@ -16,6 +16,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SDK_DIR = path.resolve(__dirname, "..", "md-sdk");
 const rd = (f) => readFile(path.join(SDK_DIR, f), "utf8");
 
+// XGM2 song bank -> md_songs.c (256-byte aligned; music(n) plays bank order n).
+function songsBankC(blobs) {
+  if (!blobs.length) return "const unsigned char *const md_song_bank[1] = {0};\nconst int md_song_count = 0;\n";
+  const names = blobs.map((_, i) => `md_song_${i}`);
+  let c = "";
+  blobs.forEach((b, i) => { c += `__attribute__((aligned(256))) static const unsigned char ${names[i]}[${b.length}] = {${Array.from(b).join(",")}};\n`; });
+  c += `const unsigned char *const md_song_bank[${names.length}] = {${names.join(",")}};\nconst int md_song_count = ${names.length};\n`;
+  return c;
+}
+
 export async function buildMd(entryPy, outPath, opts = {}) {
   const src = await readFile(entryPy, "utf8");
   const res = compile(src, path.basename(entryPy), { target: "md" });
@@ -27,11 +37,28 @@ export async function buildMd(entryPy, outPath, opts = {}) {
     "md_math.c": await rd("md_math.c"),
     "md_anim.c": await rd("md_anim.c"),
     "md_pycretro.c": await rd("md_pycretro.c"),
-    // empty song/sfx banks (md_api.c references these; real audio lands in M2
-    // via romdev-xgm2, matching the mdlua audio-assets pipeline).
-    "md_songs.c": "const unsigned char *const md_song_bank[1] = {0};\nconst int md_song_count = 0;\n",
-    "md_sfx_data.c": "const unsigned char *const md_sfx_bank[1] = {0};\nconst unsigned long md_sfx_len[1] = {0};\nconst int md_sfx_count = 0;\n",
   };
+
+  // Audio: bake mixer.music songs into the XGM2 song bank. mixer.music.load
+  // takes a .vgm (converted via romdev-xgm2) or precompiled .xgc; no file but
+  // the program uses music -> the SGDK demo tune so music(0) Just Works.
+  const usesMusic = /\bmd_music\b/.test(res.c);
+  const songBlobs = [];
+  if (usesMusic) {
+    if (res.music && res.music.length) {
+      const { vgmToXgm2 } = await import("romdev-xgm2");
+      for (const m of res.music) {
+        let bytes = new Uint8Array(await readFile(path.join(entryDir, m.path)));
+        if (bytes[0] === 0x1f && bytes[1] === 0x8b) { const { gunzipSync } = await import("node:zlib"); bytes = new Uint8Array(gunzipSync(bytes)); }
+        songBlobs.push(m.path.endsWith(".xgc") ? bytes : vgmToXgm2(bytes, { packed: true }));
+      }
+    } else {
+      const { shareDir } = await import("romdev-toolchain-m68k-gcc");
+      songBlobs.push(new Uint8Array(await readFile(path.join(shareDir, "lib", "sgdk", "music", "demo.xgc"))));
+    }
+  }
+  sources["md_songs.c"] = songsBankC(songBlobs);
+  sources["md_sfx_data.c"] = "const unsigned char *const md_sfx_bank[1] = {0};\nconst unsigned long md_sfx_len[1] = {0};\nconst int md_sfx_count = 0;\n";
   const headers = {
     "md_api.h": await rd("md_api.h"),
     "md_math.h": await rd("md_math.h"),
