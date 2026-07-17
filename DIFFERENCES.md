@@ -1,6 +1,6 @@
-# mdpy: differences from Python (and pygame)
+# mdpython: differences from Python (and pygame)
 
-mdpy compiles a **static subset** of Python to a real Sega Genesis / Mega Drive ROM (68000). Your
+mdpython compiles a **static subset** of Python to a real Sega Genesis / Mega Drive ROM (68000). Your
 code runs as native machine code, not on a Python interpreter, so some Python
 you know isn't available. Every unsupported feature is a compile error that
 tells you what to write instead.

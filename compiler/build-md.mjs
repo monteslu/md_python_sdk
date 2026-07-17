@@ -1,4 +1,4 @@
-// build-md.mjs - build an mdpy (Python) game to a Sega Genesis .bin ROM.
+// build-md.mjs - build an mdpython (Python) game to a Sega Genesis .bin ROM.
 //
 // Pipeline: Python --(pycretro)--> Genesis C (SGDK), bundled with the md_api.c
 // runtime, -> buildGenesisC (romdev-toolchain-m68k-gcc: cc1-m68k -> as -> ld ->
@@ -39,6 +39,8 @@ export async function buildMd(entryPy, outPath, opts = {}) {
     "md_pycretro.c": await rd("md_pycretro.c"),
   };
 
+  const entryDir = path.dirname(path.resolve(entryPy));
+
   // Audio: bake mixer.music songs into the XGM2 song bank. mixer.music.load
   // takes a .vgm (converted via romdev-xgm2) or precompiled .xgc; no file but
   // the program uses music -> the SGDK demo tune so music(0) Just Works.
@@ -67,7 +69,6 @@ export async function buildMd(entryPy, outPath, opts = {}) {
   };
 
   // Sheet asset: bake the pygame.image.load PNGs (cell order = load order).
-  const entryDir = path.dirname(path.resolve(entryPy));
   if (res.images && res.images.length) {
     const first = res.images[0];
     const bytes = new Uint8Array(await readFile(path.join(entryDir, first.path)));
@@ -80,7 +81,7 @@ export async function buildMd(entryPy, outPath, opts = {}) {
   if (!r.ok) {
     const parsed = parseBuildLog ? parseBuildLog(r.log) : null;
     const detail = parsed?.errors?.map((e) => `${e.file}:${e.line}: ${e.message}`).join("\n") || (r.log || "").slice(-2000);
-    throw new Error(`mdpy: ${r.stage} failed\n${detail}`);
+    throw new Error(`mdpython: ${r.stage} failed\n${detail}`);
   }
   const rom = finalizeGenesisRom(r.binary);
   await mkdir(path.dirname(path.resolve(outPath)), { recursive: true });

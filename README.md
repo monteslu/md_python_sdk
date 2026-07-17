@@ -1,8 +1,8 @@
-# mdpy
+# mdpython
 
 Write **Sega Genesis / Mega Drive** games in a pygame-flavored **Python** that
 compiles to native 68000 (via SGDK). Part of the pycretro console-Python family
-(with **gbapy** for GBA and **gtpy** for the GameTank).
+(with **gbapython** for GBA and **gtpython** for the GameTank).
 
 **Native resolution: 320 × 224** (H40). Shape drawing (`circfill`/`rectfill`/
 `line`) uses a **256 × 160 canvas anchored at the top-left**; hardware sprites,
@@ -35,13 +35,13 @@ while running:
 ```
 
 ```sh
-mdpy build examples/hello/main.py -o hello.bin
-mdpy run   examples/hello/main.py      # opens a Genesis Plus GX window
+mdpython build examples/hello/main.py -o hello.bin
+mdpython run   examples/hello/main.py      # opens a Genesis Plus GX window
 ```
 
-That exact code produces this — `mdpy run` shows:
+That exact code produces this — `mdpython run` shows:
 
-![mdpy hello](docs/img/hello.png)
+![mdpython hello](docs/img/hello.png)
 *The hello example: shapes + text, drawn by the code above (examples/hello).*
 
 
@@ -50,7 +50,7 @@ core. The compiler front-end is the `pycretro` package.
 
 ## Sprites
 
-![mdpy sprite](docs/img/sprite.png)
+![mdpython sprite](docs/img/sprite.png)
 *pygame.image.load + blit -> a hardware sprite (examples/sprite)*
 
 ## What you can do
@@ -68,7 +68,7 @@ core. The compiler front-end is the `pycretro` package.
 
 ## Examples
 
-`examples/`: hello, sprite, music. Build with `mdpy build examples/<name>/main.py`.
+`examples/`: hello, sprite, music. Build with `mdpython build examples/<name>/main.py`.
 
 See `docs/CHEATSHEET.md` and `DIFFERENCES.md`.
 

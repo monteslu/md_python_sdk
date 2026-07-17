@@ -1,4 +1,4 @@
-# mdpy cheatsheet (Sega Genesis, 68000)
+# mdpython cheatsheet (Sega Genesis, 68000)
 
 **Native resolution: 320 x 224** (H40) — `pygame.display.set_mode((320, 224))`
 must use exactly this. Shape drawing (circfill/rectfill/line) uses a **256 x 160
