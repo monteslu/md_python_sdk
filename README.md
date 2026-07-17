@@ -10,8 +10,6 @@ compiles to native 68000 (via SGDK). Part of the pycretro console-Python family
 0–15. Numbers are 16.16 fixed point. Familiar, not compatible — see
 `DIFFERENCES.md`.
 
-![mdpy hello](docs/img/hello.png)
-
 ## Your first game
 
 ```python
@@ -24,15 +22,28 @@ clock = pygame.time.Clock()
 running = True
 while running:
     cls(1)                              # dark blue background
-    print("hello python", 116, 32, 14)  # pink text
-    circfill(128, 80, 44, 10)           # a big yellow circle (in the 256x160 canvas)
-    clock.tick(60)                       # the vblank wait — paces to 60 fps
+
+    print("hello python", 116, 32, 14)  # title text, pink, near the top
+
+    # a smiley face, drawn entirely with shapes
+    circfill(128, 80, 44, 10)           # head: a big yellow circle
+    rectfill(112, 60, 120, 74, 0)       # left eye: a black square
+    rectfill(136, 60, 144, 74, 0)       # right eye
+    circfill(128, 98, 13, 0)            # mouth: a black circle
+
+    clock.tick(60)
 ```
 
 ```sh
 mdpy build examples/hello/main.py -o hello.bin
 mdpy run   examples/hello/main.py      # opens a Genesis Plus GX window
 ```
+
+That exact code produces this — `mdpy run` shows:
+
+![mdpy hello](docs/img/hello.png)
+*The hello example: shapes + text, drawn by the code above (examples/hello).*
+
 
 `npm install` brings the m68k-gcc + SGDK WASM toolchain and the Genesis Plus GX
 core. The compiler front-end is the `pycretro` package.
