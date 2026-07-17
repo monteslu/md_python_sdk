@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-screen = pygame.display.set_mode((240, 160))
+screen = pygame.display.set_mode((320, 224))
 clock = pygame.time.Clock()
 
 x = 100
